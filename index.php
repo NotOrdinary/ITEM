@@ -8,7 +8,7 @@
  * 
  * @package ITEM
  * @author fordes123
- * @version 1.0.4
+ * @version 1.0.5
  * @link https://fordes.top
  */
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
@@ -98,7 +98,7 @@ $this->need('topbar.php'); ?>
                           class="media-content lazyload" />
                         </div>
                         <div href="<?php
-                                    if ($posts->fields->navigation == '2') {
+                                    if ($posts->fields->navigation == '1') {
                                         echo $posts->fields->url();
                                     } else {
                                         echo $posts->permalink();

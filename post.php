@@ -1,15 +1,19 @@
 <?php if (!defined('__TYPECHO_ROOT_DIR__')) exit;
+error_log("post.php");
 if (isset($_POST['agree'])) {
     if ($_POST['agree'] == $this->cid) {
-        exit(agree($this->cid));
+    echo agree($this->cid);
+        exit;
     }
-    exit('error');
+    exit;
 }
 $agree = $this->hidden ? array('agree' => 0, 'recording' => true) : agreeNum($this->cid);
 $this->need('header.php');
 $this->need('sidebar.php');
 $this->need('topbar.php');
-$this->need('post-modal.php');
+if ($this->fields->navigation == '2'):
+    $this->need('post-modal.php');
+endif;
 ?>
 
 
@@ -39,9 +43,9 @@ $this->need('post-modal.php');
                                 <?php endforeach; ?>
                             </div>
                             <div class="post-content">
-                                <div class="post-excerpt"><i class="excerpt-icon"></i>
+                                <div class="post-excerpt">
                                     <?php if ($this->fields->text): ?>
-                                        <!-- 显示 链接描述 -->
+                                        <i class="excerpt-icon"></i>
                                         <h4><?php echo $this->fields->text; ?></h4>
                                     <?php endif; ?>
                                     <?php if ($this->fields->score): ?>
@@ -51,22 +55,7 @@ $this->need('post-modal.php');
                                             <i class="text-light mx-2">•</i>
                                             <?php echo $this->fields->score ?>分
                                             <i class="text-light mx-2">•</i>
-                                            <?php
-                                            $score = floatval($this->fields->score);
-                                            $totalStars = 5;
-                                            $fullStars = floor($score);
-                                            $partialScore = $score - $fullStars;
-                                            for ($i = 0; $i < $fullStars; $i++) {
-                                                echo '<i class="fas fa-star" style="color: #FFD43B;"></i>';
-                                            }
-                                            if ($partialScore > 0) {
-                                                echo '<i class="fas fa-star-half-alt" style="color: #FFD43B;"></i>';
-                                                $fullStars++;
-                                            }
-                                            for ($i = $fullStars; $i < $totalStars; $i++) {
-                                                echo '<i class="far fa-star" style="color: #FFD43B;"></i>';
-                                            }
-                                            ?>
+                                            <?php echo displayStars($this->fields->score) ?>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -77,7 +66,7 @@ $this->need('post-modal.php');
                                             <img class="nav-thumbnail" src="<?php echo $this->fields->screenshot ?>" alt="<?php echo $this->title ?>" data-bs-toggle="modal" data-bs-target="#navModal">
                                         </div>
                                     <?php endif; ?>
-                                    <?php if ($this->fields->navigation !== 0): ?>
+                                    <?php if ($this->fields->navigation == '2'): ?>
                                         <h3><?php $this->title(); ?>-使用体验</h3>
                                     <?php endif; ?>
                                     <!-- 显示 文章 -->
@@ -98,6 +87,7 @@ $this->need('post-modal.php');
                                        data-cid="<?php echo $this->cid; ?>"
                                        data-url="<?php $this->permalink(); ?>">
                                         <span><i class="far fa-thumbs-up"></i></span>
+                                        <b class="num"><?php echo $agree['agree']; ?></b>
                                     </a>
                                 </div>
                                 <div class="col">
@@ -105,13 +95,13 @@ $this->need('post-modal.php');
                                         <span><i class="far fa-star"></i></span>
                                     </a>
                                 </div>
-                                <?php if ($this->fields->navigation === '1'): ?>
+                                <?php if ($this->fields->navigation === '2'): ?>
                                     <div class="col-12 col-md-7">
                                         <button id="copyTitleButton" class="btn btn-primary btn-lg btn-block btn-goto" data-value="<?php $this->title(); ?>">
                                             进入小程序
                                         </button>
                                     </div>
-                                <?php elseif ($this->fields->navigation === '2'): ?>
+                                <?php elseif ($this->fields->navigation === '1'): ?>
                                     <div class="col-12 col-md-7">
                                         <a href="<?php echo $this->fields->url(); ?>" target="_blank" title="<?php $this->title(); ?>" class="btn btn-primary btn-lg btn-block btn-goto">
                                             访问网站
